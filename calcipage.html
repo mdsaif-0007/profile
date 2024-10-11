@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <style>
+    *,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  background-image: url(macbl.png);
+  height: 100vh;
+  display: flex;
+}
+
+.calculator {
+  display: grid;
+  grid-template-rows:
+    minmax(80px, auto)
+    repeat(5, 60px);
+  grid-template-columns: repeat(4, 60px);
+  justify-content: center;
+  background-color: gray;
+  padding: 1.4rem;
+  border-radius: 12px;
+  border: 3px solid darkgray;
+  gap: 0.7rem;
+  margin-left: 500px;
+}
+
+.calculator button {
+  border: none;
+  font-family: inherit;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: white;
+  background-color: hsl(230, 6%, 20%);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.calculator button:hover {
+  background-color: hsl(230, 6%, 30%);
+}
+.span-2 {
+  grid-column: span 2;
+}
+.calculator > .output {
+  font-size: 2rem;
+  background-color: inherit;
+  color: white;
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-end;
+  word-break: break-all;
+  border-radius: inherit;
+}
+
+.output .prev-display {
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: hsl(0, 0%, 65%);
+}
+
+.btn{
+  display: inline-block;
+  padding: 0.5rem 1.6rem;
+  margin-top: 580px;
+  margin-left: 390px;
+  background-color: transparent;
+  border-radius: 4rem;
+  font-size: 1.6rem;
+  color: darkgray;
+  letter-spacing: 0.3rem;
+  font-weight: 600;
+  border: 2px solid darkgrey;
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+
+  </style>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body style=" justify-content: center;align-items: center;">
+    <div class="calculator">
+      <div class="output">
+        <div class="prev-display"></div>
+        <div class="curr-display"></div>
+      </div>
+      <button class="span-2 clear">CLEAR</button>
+      <button class="delete">DEL</button>
+      <button class="operation">/</button>
+      <button class="number" style="background-color: darkgrey;">1</button>
+      <button class="number" style="background-color: darkgrey;">2</button>
+      <button class="number" style="background-color: darkgrey;">3</button>
+      <button class="operation">+</button>
+      <button class="number" style="background-color: darkgrey;">4</button>
+      <button class="number" style="background-color: darkgrey;">5</button>
+      <button class="number" style="background-color: darkgrey;">6</button>
+      <button class="operation">-</button>
+      <button class="number" style="background-color: darkgrey;">7</button>
+      <button class="number" style="background-color: darkgrey;">8</button>
+      <button class="number" style="background-color: darkgrey;">9</button>
+      <button class="operation">*</button>
+      <button class="number">.</button>
+      <button class="number" style="background-color: darkgrey;">0</button>
+      <button class="span-2 equal" style="background-color: orangered;">=</button>
+    </div>
+    <script>
+      const currDisplay = document.querySelector(".curr-display");
+const prevDisplay = document.querySelector(".prev-display");
+const numbers = document.querySelectorAll(".number");
+const operands = document.querySelectorAll(".operation");
+const clearBtn = document.querySelector(".clear");
+const delBtn = document.querySelector(".delete");
+const equalBtn = document.querySelector(".equal");
+let operation;
+
+function appendNumber(number) {
+  if (number === "." && currDisplay.innerText.includes(".")) return;
+  currDisplay.innerText += number;
+}
+
+function chooseOperation(operand) {
+  if (currDisplay.innerText === "") return;
+  compute(operand);
+  operation = operand;
+  currDisplay.innerText += operand;
+  prevDisplay.innerText = currDisplay.innerText;
+  currDisplay.innerText = "";
+}
+
+function clearDisplay() {
+  currDisplay.innerText = "";
+  prevDisplay.innerText = "";
+}
+
+function compute(operand) {
+  let result;
+  const previousValue = parseFloat(prevDisplay.innerText);
+  const currentValue = parseFloat(currDisplay.innerText);
+
+  if (isNaN(previousValue) || isNaN(currentValue)) return;
+
+  switch (operation) {
+    case "+":
+      result = previousValue + currentValue;
+      break;
+    case "-":
+      result = previousValue - currentValue;
+      break;
+    case "*":
+      result = previousValue * currentValue;
+      break;
+    case "/":
+      result = previousValue / currentValue;
+      break;
+    default:
+      return;
+  }
+  currDisplay.innerText = result;
+}
+
+numbers.forEach((number) => {
+  number.addEventListener("click", () => {
+    appendNumber(number.innerText);
+  });
+});
+
+operands.forEach((operand) => {
+  operand.addEventListener("click", () => {
+    chooseOperation(operand.innerText);
+  });
+});
+
+clearBtn.addEventListener("click", () => {
+  clearDisplay();
+});
+
+equalBtn.addEventListener("click", () => {
+  compute();
+  prevDisplay.innerText = "";
+});
+
+delBtn.addEventListener("click", () => {
+  currDisplay.innerText = currDisplay.innerText.slice(0, -1);
+});
+    </script>
+  </body>
+  <a href="more.html" class="btn">back</a>
+</html>
